@@ -1,0 +1,27 @@
+{
+  "_about": "Squads for battles. Invader squads list species ids. Defender squads give one grade and a weapon per soldier. Unit names come from species name or weapon short_name plus a number.",
+  "local_forces": {
+    "name": "Local forces", "side": "defender", "grade": "green",
+    "weapons": ["assault_rifle", "assault_rifle", "assault_rifle", "shotgun"]
+  },
+  "defender_squad": {
+    "name": "Defender squad", "side": "defender", "grade": "regular",
+    "weapons": ["assault_rifle", "assault_rifle", "shotgun", "machine_gun"]
+  },
+  "strike_team": {
+    "name": "Strike team", "side": "defender", "grade": "veteran",
+    "weapons": ["assault_rifle", "assault_rifle", "assault_rifle", "shotgun", "machine_gun", "sniper_rifle"]
+  },
+  "wardens_and_striders": {
+    "name": "2 Wardens, 2 Striders", "side": "invader",
+    "species": ["warden", "warden", "strider", "strider"]
+  },
+  "four_wardens": {
+    "name": "4 Wardens", "side": "invader",
+    "species": ["warden", "warden", "warden", "warden"]
+  },
+  "vessel_swarm": {
+    "name": "6 Vessels, 1 Drone", "side": "invader",
+    "species": ["vessel", "vessel", "vessel", "vessel", "vessel", "vessel", "drone"]
+  }
+}

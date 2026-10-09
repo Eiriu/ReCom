@@ -42,9 +42,30 @@ static func format(result: Dictionary, level: Level = Level.FULL) -> String:
 	var holder := String(result["holder"])
 	lines.append("Result: %s %s the field after round %d (%s)" % [
 		SIDE_LABEL[holder], "hold" if holder == "invader" else "holds", result["rounds"], result["end_reason"]])
-	_append_losses(lines, "Invaders", result["invaders"], result["holder"] == "invader", name_width)
-	_append_losses(lines, "Defender", result["defenders"], result["holder"] == "defender", name_width)
+	lines.append("Losses: Invaders %s · Defender %s" % [
+		_loss_counts(result["invaders"], holder == "invader"), _loss_counts(result["defenders"], holder == "defender")])
+	lines.append("")
+	_append_losses(lines, "Invaders", result["invaders"], holder == "invader", name_width)
+	_append_losses(lines, "Defender", result["defenders"], holder == "defender", name_width)
 	return "\n".join(lines)
+
+
+## "2 killed, 1 downed (captured)" or "none".
+static func _loss_counts(units: Array, held_field: bool) -> String:
+	var killed := 0
+	var downed := 0
+	for unit: Dictionary in units:
+		match int(unit["state"]):
+			CombatUnit.State.DEAD:
+				killed += 1
+			CombatUnit.State.DOWNED:
+				downed += 1
+	var parts: Array[String] = []
+	if killed > 0:
+		parts.append("%d killed" % killed)
+	if downed > 0:
+		parts.append("%d downed (%s)" % [downed, "recovered" if held_field else "captured"])
+	return "none" if parts.is_empty() else ", ".join(parts)
 
 
 static func _append_roster(lines: Array[String], label: String, units: Array, width: int) -> void:
@@ -76,8 +97,9 @@ static func _attack_line(event: Dictionary, width: int) -> String:
 		String(event["attacker"]).rpad(width), event["target"], where,
 		event["hit_chance"], _working(event), event["hit_roll"]]
 
+	var rule := " · %s" % event["rule"] if event.has("rule") else ""
 	if not event["hit"]:
-		return text + "miss"
+		return text + "miss" + rule
 
 	text += "HIT"
 	if event["crit"]:
@@ -95,7 +117,7 @@ static func _attack_line(event: Dictionary, width: int) -> String:
 			text += "%d/%d" % [event["health_after"], event["max_health"]]
 			if event.get("became_wounded", false):
 				text += ", now Wounded"
-	return text
+	return text + rule
 
 
 ## "[Aim 65, range +10]", plus the cap if the raw total was clamped.

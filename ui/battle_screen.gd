@@ -3,6 +3,8 @@ extends Control
 ## It only displays results. All game logic lives in res://core.
 
 var _data: GameData
+var _scenario_picker: OptionButton
+var _scenario_ids: Array[String] = [Scenarios.SQUAD, Scenarios.DUEL]
 var _seed_input: LineEdit
 var _show_rolls: CheckBox
 var _report_view: TextEdit
@@ -28,13 +30,19 @@ func _build_layout() -> void:
 	margin.add_child(column)
 
 	var title := Label.new()
-	title.text = "Slice 1.1 — Duel: one Warden against one Regular, one tree, shooting only"
+	title.text = "Battle test screen — slice 1.2: squads of 4, turn order by Mobility, shooting only"
 	title.add_theme_font_size_override("font_size", 20)
 	column.add_child(title)
 
 	var controls := HBoxContainer.new()
 	controls.add_theme_constant_override("separation", 8)
 	column.add_child(controls)
+
+	_scenario_picker = OptionButton.new()
+	for id in _scenario_ids:
+		_scenario_picker.add_item(Scenarios.NAMES[id])
+	_scenario_picker.item_selected.connect(func(_index: int) -> void: _fight_from_input())
+	controls.add_child(_scenario_picker)
 
 	var seed_label := Label.new()
 	seed_label.text = "Seed"
@@ -89,7 +97,8 @@ func _fight_from_input() -> void:
 
 func _fight(seed_value: int) -> void:
 	_seed_input.text = str(seed_value)
-	_last_result = Scenarios.duel(_data, seed_value).run()
+	var scenario := _scenario_ids[_scenario_picker.selected]
+	_last_result = Scenarios.build(scenario, _data, seed_value).run()
 	_refresh_report()
 	_status.text = "Battle %d done. To report a problem, use Copy report and paste it into the chat." % seed_value
 

@@ -3,9 +3,9 @@ extends RefCounted
 ## Runs one battle from start to finish with no player input and records
 ## every event for the battle report.
 ##
-## Slice 1.1: units stand in the open and only shoot. Each unit shoots once per
-## turn, because shooting ends a unit's turn. Later slices add movement, cover,
-## flanking, reactions and Morale through the shared AI rules.
+## Each side's units act in Mobility order (highest first, ties by roster
+## order). Each unit has two actions, chosen by CombatAI. Shooting ends a
+## unit's turn, so until movement arrives (slice 1.3) every unit shoots once.
 
 var title: String
 var location: String
@@ -102,14 +102,24 @@ func _place_cover_features() -> Array[String]:
 
 
 func _take_turn(side: String, round_number: int) -> void:
+	var cfg := data.combat
 	events.append({"type": "turn", "round": round_number, "side": side})
+	var enemies := _units(_other(side))
 	for unit in _acting_order(_units(side)):
 		if not unit.is_active():
 			continue
-		var target := _pick_target(unit)
-		if target == null:
+		var actions_left := int(cfg["actions_per_turn"])
+		while actions_left > 0 and unit.is_active():
+			var choice := CombatAI.choose_shot(unit, enemies, cfg)
+			if choice.is_empty():
+				return
+			var record := CombatRules.resolve_attack(unit, choice["target"], dice, cfg)
+			record["rule"] = choice["rule"]
+			events.append(record)
+			# Shooting ends the unit's turn, whatever actions are left.
+			actions_left = 0
+		if _side_holding_field() != "":
 			return
-		events.append(CombatRules.resolve_attack(unit, target, dice, data.combat))
 
 
 ## Highest Mobility first; ties keep roster order.
@@ -125,15 +135,6 @@ func _acting_order(units: Array[CombatUnit]) -> Array[CombatUnit]:
 	for pair: Array in indexed:
 		ordered.append(pair[0])
 	return ordered
-
-
-## Slice 1.1 placeholder: shoot the first enemy still able to fight.
-## The full AI decision rules replace this in later slices.
-func _pick_target(unit: CombatUnit) -> CombatUnit:
-	for enemy in _units(_other(unit.side)):
-		if enemy.is_active():
-			return enemy
-	return null
 
 
 ## Returns the side holding the field if the other side can no longer fight.

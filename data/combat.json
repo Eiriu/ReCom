@@ -8,5 +8,11 @@
   "crit_multiplier": 1.5,
   "flank_crit_bonus": 50,
   "min_damage": 1,
-  "round_limit": 12
+  "round_limit": 12,
+  "actions_per_turn": 2,
+  "ai": {
+    "_about": "AI decision thresholds (Combat core spec, AI decision rules).",
+    "finish_off_min_hit": 50,
+    "best_attack_min_score": 1.5
+  }
 }

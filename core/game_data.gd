@@ -11,6 +11,7 @@ var combat: Dictionary = {}
 var weapons: Dictionary = {}
 var species: Dictionary = {}
 var defender_grades: Dictionary = {}
+var squads: Dictionary = {}
 
 
 static func load_default() -> GameData:
@@ -19,6 +20,7 @@ static func load_default() -> GameData:
 	data.weapons = _load_json("weapons.json")
 	data.species = _load_json("species.json")
 	data.defender_grades = _load_json("defender_grades.json")
+	data.squads = _load_json("squads.json")
 	return data
 
 
@@ -54,6 +56,13 @@ func grade_entry(id: String) -> Dictionary:
 		push_error("Unknown Defender grade id: %s" % id)
 		return {}
 	return defender_grades[id]
+
+
+func squad_entry(id: String) -> Dictionary:
+	if not squads.has(id):
+		push_error("Unknown squad id: %s" % id)
+		return {}
+	return squads[id]
 
 
 ## Ids of real entries in a table, skipping "_about" notes.

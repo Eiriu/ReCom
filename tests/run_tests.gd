@@ -17,6 +17,9 @@ func _initialize() -> void:
 	_test_wounded_and_death()
 	_test_determinism()
 	_test_battles_end()
+	_test_squads()
+	_test_ai_choices()
+	_test_squad_battles()
 
 	print("\n%d passed, %d failed" % [_passed, _failed])
 	quit(1 if _failed > 0 else 0)
@@ -176,3 +179,113 @@ func _test_battles_end() -> void:
 		if result["holder"] == "invader":
 			invader_wins += 1
 	print("Duel: Warden wins %d of %d (%.1f%%)" % [invader_wins, total, 100.0 * invader_wins / total])
+
+
+func _test_squads() -> void:
+	var defenders := Scenarios.build_squad("defender_squad", _data)
+	var names: Array[String] = []
+	for unit in defenders:
+		names.append(unit.unit_name)
+	_expect("Defender squad names", names, ["Rifle-1", "Rifle-2", "Shotgun-1", "MG-1"] as Array[String])
+	_expect("Defender squad is Regulars", defenders[0].kind, "regular")
+	_expect("Machine gunner carries a machine gun", defenders[3].weapon_id, "machine_gun")
+
+	var battle := Scenarios.squad_battle(_data, 1)
+	var order: Array[String] = []
+	for unit in battle._acting_order(battle.invaders):
+		order.append(unit.unit_name)
+	_expect("Invaders act by Mobility, ties in roster order", order,
+		["Strider-1", "Strider-2", "Warden-1", "Warden-2"] as Array[String])
+
+	for id in GameData.entry_ids(_data.squads):
+		var squad := Scenarios.build_squad(id, _data)
+		_check("Squad %s builds" % id, not squad.is_empty())
+
+
+func _test_ai_choices() -> void:
+	var cfg := _data.combat
+	var warden := _warden()
+
+	var healthy := _regular()
+	healthy.unit_name = "Healthy"
+	var hurt := _regular()
+	hurt.unit_name = "Hurt"
+	hurt.health = 3
+	hurt.cover = "half"
+	var enemies: Array[CombatUnit] = [healthy, hurt]
+	var choice := CombatAI.choose_shot(warden, enemies, cfg)
+	_expect("Finish off a killable target at 50%+", choice["target"].unit_name, "Hurt")
+	_expect("Finish off rule recorded", choice["rule"], CombatAI.RULE_FINISH_OFF)
+
+	hurt.cover = "full"
+	choice = CombatAI.choose_shot(warden, enemies, cfg)
+	_expect("No finish off below 50%: take the best expected damage", choice["target"].unit_name, "Healthy")
+	_expect("Best attack rule recorded", choice["rule"], CombatAI.RULE_BEST_ATTACK)
+
+	var tough := _regular()
+	tough.health = 1
+	_check("Expected damage never exceeds remaining Health",
+		CombatAI.expected_damage(warden, tough, cfg) <= 1.0)
+	# Pulse rifle 3-5: normal average 4; crits floor(4.5, 6, 7.5) = 4, 6, 7, average 17/3.
+	_check("Expected damage = hit x average damage with crits",
+		absf(CombatAI.expected_damage(warden, _regular(), cfg) - 0.75 * (0.9 * 4.0 + 0.1 * 17.0 / 3.0)) < 0.001,
+		"(got %.3f)" % CombatAI.expected_damage(warden, _regular(), cfg))
+
+	healthy.state = CombatUnit.State.DEAD
+	hurt.state = CombatUnit.State.DOWNED
+	_check("No shot when no enemy can fight", CombatAI.choose_shot(warden, enemies, cfg).is_empty())
+
+
+func _test_squad_battles() -> void:
+	var first := BattleReport.format(Scenarios.squad_battle(_data, 777).run())
+	var second := BattleReport.format(Scenarios.squad_battle(_data, 777).run())
+	_check("Squad battle: same seed gives the same battle", first == second)
+
+	var limit := int(_data.combat["round_limit"])
+	for seed_value in range(1, 301):
+		var result := Scenarios.squad_battle(_data, seed_value).run()
+		_check("Squad %d ends within the round limit" % seed_value, int(result["rounds"]) <= limit)
+
+		var out_of_action := {}
+		var shots_this_turn := {}
+		var turn_key := ""
+		for event: Dictionary in result["events"]:
+			if event["type"] == "turn":
+				turn_key = "%d-%s" % [event["round"], event["side"]]
+				continue
+			if event["type"] != "attack":
+				continue
+			var shooter := String(event["attacker"])
+			_check("Squad %d: %s acts only while able to fight" % [seed_value, shooter], not out_of_action.has(shooter))
+			_check("Squad %d: %s is not shot after going down" % [seed_value, event["target"]],
+				not out_of_action.has(String(event["target"])))
+			var key := "%s-%s" % [turn_key, shooter]
+			_check("Squad %d: %s shoots once per turn" % [seed_value, shooter], not shots_this_turn.has(key))
+			shots_this_turn[key] = true
+			if event.has("outcome"):
+				out_of_action[String(event["target"])] = true
+
+		if String(result["end_reason"]).begins_with("no enemy"):
+			var losers: Array = result["defenders"] if result["holder"] == "invader" else result["invaders"]
+			for unit: Dictionary in losers:
+				_check("Squad %d: losing side has nobody left" % seed_value,
+					int(unit["state"]) != CombatUnit.State.ACTIVE)
+
+		var downed_in_events := 0
+		var killed_in_events := 0
+		for event: Dictionary in result["events"]:
+			match String(event.get("outcome", "")):
+				"downed":
+					downed_in_events += 1
+				"dead":
+					killed_in_events += 1
+		var downed_final := 0
+		var killed_final := 0
+		for unit: Dictionary in result["invaders"] + result["defenders"]:
+			match int(unit["state"]):
+				CombatUnit.State.DOWNED:
+					downed_final += 1
+				CombatUnit.State.DEAD:
+					killed_final += 1
+		_expect("Squad %d: kills in the log match the final count" % seed_value, killed_in_events, killed_final)
+		_expect("Squad %d: downed in the log match the final count" % seed_value, downed_in_events, downed_final)
