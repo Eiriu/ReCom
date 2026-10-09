@@ -143,6 +143,15 @@ func _test_determinism() -> void:
 		distinct[BattleReport.format(Scenarios.duel(_data, seed_value).run())] = true
 	_check("Different seeds give different battles", distinct.size() > 5, "(%d distinct of 10)" % distinct.size())
 
+	var first_sides := {}
+	for seed_value in range(1, 51):
+		first_sides[Scenarios.duel(_data, seed_value).run()["first_side"]] = true
+	_check("Both sides sometimes shoot first", first_sides.size() == 2)
+
+	var fixed := Scenarios.duel(_data, 5)
+	fixed.first_side = CombatUnit.SIDE_DEFENDER
+	_expect("A fixed first side is respected", fixed.run()["first_side"], CombatUnit.SIDE_DEFENDER)
+
 
 func _test_battles_end() -> void:
 	var limit := int(_data.combat["round_limit"])

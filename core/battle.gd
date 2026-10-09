@@ -11,9 +11,13 @@ var title: String
 var location: String
 var invaders: Array[CombatUnit] = []
 var defenders: Array[CombatUnit] = []
-## Which side starts. The other side is the one being attacked, and it holds
-## the field if the round limit is reached.
+const FIRST_SIDE_RANDOM := "random"
+
+## Which side takes the first turn: a side, or FIRST_SIDE_RANDOM to roll for it
+## at battle start (the roll comes from the seed, so replays stay identical).
 var first_side: String = CombatUnit.SIDE_INVADER
+## The side being attacked. It holds the field if the round limit is reached.
+var attacked_side: String = CombatUnit.SIDE_DEFENDER
 
 var data: GameData
 var dice: Dice
@@ -28,14 +32,15 @@ func _init(data_in: GameData, seed_in: int) -> void:
 func run() -> Dictionary:
 	var cfg := data.combat
 	var round_limit := int(cfg["round_limit"])
-	var second_side := _other(first_side)
+	var starting_side := _decide_first_side()
+	var second_side := _other(starting_side)
 	var holder := ""
 	var end_reason := ""
 	var rounds_fought := 0
 
 	for round_number in range(1, round_limit + 1):
 		rounds_fought = round_number
-		for side: String in [first_side, second_side]:
+		for side: String in [starting_side, second_side]:
 			_take_turn(side, round_number)
 			holder = _side_holding_field()
 			if holder != "":
@@ -45,7 +50,7 @@ func run() -> Dictionary:
 			break
 
 	if holder == "":
-		holder = second_side
+		holder = attacked_side
 		end_reason = "round limit reached; the attacked side holds the field"
 
 	return {
@@ -53,6 +58,7 @@ func run() -> Dictionary:
 		"title": title,
 		"location": location,
 		"rounds": rounds_fought,
+		"first_side": starting_side,
 		"holder": holder,
 		"end_reason": end_reason,
 		"events": events,
@@ -60,6 +66,17 @@ func run() -> Dictionary:
 		"defenders": _summaries(defenders),
 		"rolls_made": dice.rolls_made,
 	}
+
+
+## Rolls for the first turn if asked to: 50 or less, invaders start.
+## This is the first roll of the battle, so it never shifts later rolls.
+func _decide_first_side() -> String:
+	if first_side != FIRST_SIDE_RANDOM:
+		return first_side
+	var roll := dice.percent()
+	var side := CombatUnit.SIDE_INVADER if roll <= 50 else CombatUnit.SIDE_DEFENDER
+	events.append({"type": "initiative", "roll": roll, "side": side})
+	return side
 
 
 func _take_turn(side: String, round_number: int) -> void:

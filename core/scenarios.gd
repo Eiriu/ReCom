@@ -5,9 +5,10 @@ extends RefCounted
 
 
 ## Slice 1.1: one Warden against one Regular with an assault rifle,
-## both in the open at Medium range.
+## both in the open at Medium range. Who shoots first is rolled from the seed.
 static func duel(data: GameData, seed_value: int) -> Battle:
 	var battle := Battle.new(data, seed_value)
+	battle.first_side = Battle.FIRST_SIDE_RANDOM
 	battle.title = "Duel"
 	battle.location = "Open ground"
 

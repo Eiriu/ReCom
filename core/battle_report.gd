@@ -24,6 +24,10 @@ static func format(result: Dictionary, level: Level = Level.FULL) -> String:
 	if level == Level.FULL:
 		for event: Dictionary in result["events"]:
 			match String(event["type"]):
+				"initiative":
+					lines.append("")
+					lines.append("First turn: %s (rolled %d; Invaders start on 50 or less)" % [
+						SIDE_LABEL[event["side"]], event["roll"]])
 				"turn":
 					lines.append("")
 					lines.append("Round %d — %s" % [event["round"], SIDE_LABEL[event["side"]]])
