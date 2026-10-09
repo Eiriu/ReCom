@@ -3,8 +3,9 @@
 An alien-invasion strategy game: Long War 1 seen from the invader's side.
 The design lives in the design doc; this repository holds the game.
 
-Current build: **slice 1.1 — the duel.** One Warden fights one Regular soldier in the
-open, shooting only, and the game prints a battle report.
+Current build: **slice 1.1 — the duel.** One Warden fights one Regular soldier, shooting
+only, with one tree on the field. The seed decides who shoots first and who stands behind
+the tree (Half cover). The game prints a battle report.
 
 ## Running it
 
@@ -44,6 +45,8 @@ the effect. Keep the commas and quotes as they are.
 - `core/` — game logic with no graphics: rules, battle, report. Everything here runs headless.
 - `data/` — all tunable numbers.
 - `ui/` — screens. They only display what `core/` produces.
+- `tools/run_batch.gd` — fights many duels and prints win rates:
+  `godot --headless --path . --script res://tools/run_batch.gd -- --count=500 --start=1001`
 - `tools/run_battle.gd` — prints a battle without a window:
   `godot --headless --path . --script res://tools/run_battle.gd -- --seed=48213`
 - `tests/run_tests.gd` — automated checks:

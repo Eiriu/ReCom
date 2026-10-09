@@ -28,7 +28,7 @@ func _build_layout() -> void:
 	margin.add_child(column)
 
 	var title := Label.new()
-	title.text = "Slice 1.1 — Duel: one Warden against one Regular, in the open, shooting only"
+	title.text = "Slice 1.1 — Duel: one Warden against one Regular, one tree, shooting only"
 	title.add_theme_font_size_override("font_size", 20)
 	column.add_child(title)
 

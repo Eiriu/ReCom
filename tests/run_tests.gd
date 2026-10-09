@@ -148,6 +148,18 @@ func _test_determinism() -> void:
 		first_sides[Scenarios.duel(_data, seed_value).run()["first_side"]] = true
 	_check("Both sides sometimes shoot first", first_sides.size() == 2)
 
+	var tree_sides := {}
+	for seed_value in range(1, 51):
+		var battle := Scenarios.duel(_data, seed_value)
+		var result := battle.run()
+		var behind := 0
+		for unit in battle.invaders + battle.defenders:
+			if unit.cover == "half":
+				behind += 1
+		_expect("Seed %d: exactly one unit behind the tree" % seed_value, behind, 1)
+		tree_sides[result["feature_sides"][0]] = true
+	_check("Both sides sometimes get the tree", tree_sides.size() == 2)
+
 	var fixed := Scenarios.duel(_data, 5)
 	fixed.first_side = CombatUnit.SIDE_DEFENDER
 	_expect("A fixed first side is respected", fixed.run()["first_side"], CombatUnit.SIDE_DEFENDER)

@@ -18,6 +18,9 @@ const FIRST_SIDE_RANDOM := "random"
 var first_side: String = CombatUnit.SIDE_INVADER
 ## The side being attacked. It holds the field if the round limit is reached.
 var attacked_side: String = CombatUnit.SIDE_DEFENDER
+## Single pieces of cover on the field, e.g. {"name": "tree", "cover": "half"}.
+## At battle start each one is rolled to a random unit, which stands behind it.
+var cover_features: Array[Dictionary] = []
 
 var data: GameData
 var dice: Dice
@@ -33,6 +36,7 @@ func run() -> Dictionary:
 	var cfg := data.combat
 	var round_limit := int(cfg["round_limit"])
 	var starting_side := _decide_first_side()
+	var feature_sides := _place_cover_features()
 	var second_side := _other(starting_side)
 	var holder := ""
 	var end_reason := ""
@@ -59,6 +63,7 @@ func run() -> Dictionary:
 		"location": location,
 		"rounds": rounds_fought,
 		"first_side": starting_side,
+		"feature_sides": feature_sides,
 		"holder": holder,
 		"end_reason": end_reason,
 		"events": events,
@@ -77,6 +82,23 @@ func _decide_first_side() -> String:
 	var side := CombatUnit.SIDE_INVADER if roll <= 50 else CombatUnit.SIDE_DEFENDER
 	events.append({"type": "initiative", "roll": roll, "side": side})
 	return side
+
+
+## Rolls which unit stands behind each cover feature, after the first-turn roll.
+## Returns the side of each feature's holder, in feature order.
+func _place_cover_features() -> Array[String]:
+	var sides: Array[String] = []
+	var everyone: Array[CombatUnit] = []
+	everyone.append_array(invaders)
+	everyone.append_array(defenders)
+	for feature in cover_features:
+		var roll := dice.between(1, everyone.size())
+		var unit := everyone[roll - 1]
+		unit.cover = String(feature["cover"])
+		sides.append(unit.side)
+		events.append({"type": "cover_feature", "name": feature["name"], "cover": unit.cover,
+			"unit": unit.unit_name, "roll": roll, "options": everyone.size()})
+	return sides
 
 
 func _take_turn(side: String, round_number: int) -> void:

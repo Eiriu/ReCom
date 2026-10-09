@@ -28,6 +28,10 @@ static func format(result: Dictionary, level: Level = Level.FULL) -> String:
 					lines.append("")
 					lines.append("First turn: %s (rolled %d; Invaders start on 50 or less)" % [
 						SIDE_LABEL[event["side"]], event["roll"]])
+				"cover_feature":
+					lines.append("%s: %s stands behind it, %s (rolled %d of 1–%d)" % [
+						String(event["name"]).capitalize(), event["unit"], COVER_LABEL[event["cover"]],
+						event["roll"], event["options"]])
 				"turn":
 					lines.append("")
 					lines.append("Round %d — %s" % [event["round"], SIDE_LABEL[event["side"]]])

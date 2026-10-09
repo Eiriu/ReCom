@@ -5,12 +5,14 @@ extends RefCounted
 
 
 ## Slice 1.1: one Warden against one Regular with an assault rifle,
-## both in the open at Medium range. Who shoots first is rolled from the seed.
+## at Medium range, with one tree in the middle. The seed decides who shoots
+## first and who stands behind the tree (Half cover).
 static func duel(data: GameData, seed_value: int) -> Battle:
 	var battle := Battle.new(data, seed_value)
 	battle.first_side = Battle.FIRST_SIDE_RANDOM
 	battle.title = "Duel"
-	battle.location = "Open ground"
+	battle.location = "Open ground, one tree"
+	battle.cover_features.append({"name": "tree", "cover": "half"})
 
 	var warden := CombatUnit.from_species("warden", "Warden-1", data)
 	var rifle := CombatUnit.from_grade("regular", "assault_rifle", "Rifle-1", data)
