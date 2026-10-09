@@ -45,15 +45,15 @@ static func duel(data: GameData, seed_value: int) -> Battle:
 
 
 ## Slice 1.2: 2 Wardens and 2 Striders against a Defender squad of 4 Regulars,
-## at Medium range with one tree. The seed decides who goes first and who gets
-## the tree. Range bands and real cover arrive in slice 1.3.
+## at Medium range on the test field. The seed decides who goes first and each
+## unit's cover (15% Full, 25% Half, 60% None). Range bands arrive in slice 1.3.
 static func squad_battle(data: GameData, seed_value: int,
 		invader_squad: String = "wardens_and_striders", defender_squad: String = "defender_squad") -> Battle:
 	var battle := Battle.new(data, seed_value)
 	battle.first_side = Battle.FIRST_SIDE_RANDOM
 	battle.title = "%s vs %s" % [data.squad_entry(invader_squad)["name"], data.squad_entry(defender_squad)["name"]]
-	battle.location = "Open ground, one tree"
-	battle.cover_features.append({"name": "tree", "cover": "half"})
+	battle.terrain_id = "test_field"
+	battle.location = String(data.terrain_entry("test_field")["name"])
 	battle.invaders = build_squad(invader_squad, data)
 	battle.defenders = build_squad(defender_squad, data)
 	return battle

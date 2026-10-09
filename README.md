@@ -4,8 +4,10 @@ An alien-invasion strategy game: Long War 1 seen from the invader's side.
 The design lives in the design doc; this repository holds the game.
 
 Current build: **slice 1.2 — squads.** Two Wardens and two Striders fight a Defender squad
-of four Regulars (two rifles, a shotgun, a machine gun), shooting only, with one tree on the
-field. The slice 1.1 duel is still available from the drop-down.
+of four Regulars (two rifles, a shotgun, a machine gun), shooting only. At the start every
+unit rolls its cover: about 15% Full, 25% Half and 60% none (set in `data/terrains.json`,
+"test_field"). Units keep that cover all battle until movement arrives in slice 1.3. The
+slice 1.1 duel (with its tree) is still available from the drop-down.
 
 ## Running it
 
@@ -23,13 +25,15 @@ The screen fights a squad battle straight away. **New random battle** fights ano
 Type a number into **Seed** and press **Fight this seed** to replay a battle exactly. The
 drop-down at the left switches between the squad battle and the old duel.
 
-Check three things (about 30 minutes):
+Check four things (about 30 minutes):
 
 - **Battles always end.** Every battle finishes with a Result line, either because one side
   has nobody left or because round 12 ended.
 - **Turn order looks right.** Within each side's turn, faster units act first: Striders
   (Mobility 8) before Wardens (5). The Defender soldiers all have Mobility 6, so they act in
   roster order: Rifle-1, Rifle-2, Shotgun-1, MG-1. Units that are down never act again.
+- **Cover is rolled for everyone.** The Cover lines at the top show each unit's roll and
+  result (Full on 1–15, Half on 16–40, none above), and shots at that unit use it.
 - **Deaths are counted correctly.** The Losses line and the list under it match what
   happened in the rounds above.
 

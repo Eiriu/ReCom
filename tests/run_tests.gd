@@ -20,6 +20,7 @@ func _initialize() -> void:
 	_test_squads()
 	_test_ai_choices()
 	_test_squad_battles()
+	_test_cover_rolls()
 
 	print("\n%d passed, %d failed" % [_passed, _failed])
 	quit(1 if _failed > 0 else 0)
@@ -289,3 +290,33 @@ func _test_squad_battles() -> void:
 					killed_final += 1
 		_expect("Squad %d: kills in the log match the final count" % seed_value, killed_in_events, killed_final)
 		_expect("Squad %d: downed in the log match the final count" % seed_value, downed_in_events, downed_final)
+
+
+func _test_cover_rolls() -> void:
+	var mix: Dictionary = _data.terrain_entry("test_field")["cover_mix"]
+	_expect("Roll 15 is Full", CombatRules.cover_from_roll(15, mix), "full")
+	_expect("Roll 16 is Half", CombatRules.cover_from_roll(16, mix), "half")
+	_expect("Roll 40 is Half", CombatRules.cover_from_roll(40, mix), "half")
+	_expect("Roll 41 is None", CombatRules.cover_from_roll(41, mix), "none")
+	_expect("Roll 100 is None", CombatRules.cover_from_roll(100, mix), "none")
+
+	for id in GameData.entry_ids(_data.terrains):
+		var terrain_mix: Dictionary = _data.terrains[id]["cover_mix"]
+		var total := int(terrain_mix["full"]) + int(terrain_mix["half"]) + int(terrain_mix["none"])
+		_expect("Terrain %s cover mix adds up to 100" % id, total, 100)
+
+	var counts := {"full": 0, "half": 0, "none": 0}
+	var units := 0
+	for seed_value in range(1, 1001):
+		var battle := Scenarios.squad_battle(_data, seed_value)
+		battle.run()
+		for event: Dictionary in battle.events:
+			if event["type"] == "cover_rolls":
+				for roll: Dictionary in event["rolls"]:
+					counts[roll["cover"]] += 1
+					units += 1
+		# Every unit starts with the cover it rolled (units never move yet).
+	_expect("Every unit in every squad battle rolls cover", units, 8000)
+	_check("About 15% Full", absf(100.0 * counts["full"] / units - 15.0) < 2.0, str(counts))
+	_check("About 25% Half", absf(100.0 * counts["half"] / units - 25.0) < 2.0, str(counts))
+	_check("About 60% None", absf(100.0 * counts["none"] / units - 60.0) < 2.0, str(counts))

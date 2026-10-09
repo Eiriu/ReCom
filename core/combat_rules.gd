@@ -18,6 +18,17 @@ static func range_modifier(weapon: Dictionary, band: String, cfg: Dictionary) ->
 	return -int(cfg["range_penalty_per_band"]) * distance
 
 
+## Cover from a terrain's cover mix: a roll of 1-100 against Full, then Half,
+## then None. E.g. 15/25/60 gives Full on 1-15, Half on 16-40, None on 41-100.
+static func cover_from_roll(roll: int, cover_mix: Dictionary) -> String:
+	var limit := 0
+	for cover: String in ["full", "half", "none"]:
+		limit += int(cover_mix.get(cover, 0))
+		if roll <= limit:
+			return cover
+	return "none"
+
+
 ## Hit chance = Aim - Defense - Cover + Modifiers, clamped to 5-95.
 ## Returns the chance plus each term, so reports can show the working.
 static func hit_chance(attacker: CombatUnit, target: CombatUnit, cfg: Dictionary, flanked: bool = false) -> Dictionary:

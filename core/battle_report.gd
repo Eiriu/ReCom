@@ -10,6 +10,7 @@ enum Level { FULL, SUMMARY }
 const SIDE_LABEL := {"invader": "Invaders", "defender": "Defender"}
 const BAND_LABEL := {"close": "Close", "medium": "Medium", "long": "Long"}
 const COVER_LABEL := {"none": "no cover", "half": "Half cover", "full": "Full cover"}
+const COVER_SHORT := {"none": "None", "half": "Half", "full": "Full"}
 
 
 static func format(result: Dictionary, level: Level = Level.FULL) -> String:
@@ -28,6 +29,16 @@ static func format(result: Dictionary, level: Level = Level.FULL) -> String:
 					lines.append("")
 					lines.append("First turn: %s (rolled %d; Invaders start on 50 or less)" % [
 						SIDE_LABEL[event["side"]], event["roll"]])
+				"cover_rolls":
+					var mix: Dictionary = event["mix"]
+					lines.append("Cover (Full on 1–%d, Half on %d–%d, None above):" % [
+						int(mix["full"]), int(mix["full"]) + 1, int(mix["full"]) + int(mix["half"])])
+					for side: String in ["invader", "defender"]:
+						var parts: Array[String] = []
+						for roll: Dictionary in event["rolls"]:
+							if roll["side"] == side:
+								parts.append("%s %s (%d)" % [roll["unit"], COVER_SHORT[roll["cover"]], roll["roll"]])
+						lines.append("  %-9s %s" % [SIDE_LABEL[side], ", ".join(parts)])
 				"cover_feature":
 					lines.append("%s: %s stands behind it, %s (rolled %d of 1–%d)" % [
 						String(event["name"]).capitalize(), event["unit"], COVER_LABEL[event["cover"]],

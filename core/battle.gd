@@ -21,6 +21,9 @@ var attacked_side: String = CombatUnit.SIDE_DEFENDER
 ## Single pieces of cover on the field, e.g. {"name": "tree", "cover": "half"}.
 ## At battle start each one is rolled to a random unit, which stands behind it.
 var cover_features: Array[Dictionary] = []
+## Terrain id from data/terrains.json. If set, every unit rolls its cover from
+## the terrain's cover mix at battle start, before any cover features apply.
+var terrain_id: String = ""
 
 var data: GameData
 var dice: Dice
@@ -36,6 +39,7 @@ func run() -> Dictionary:
 	var cfg := data.combat
 	var round_limit := int(cfg["round_limit"])
 	var starting_side := _decide_first_side()
+	_roll_starting_cover()
 	var feature_sides := _place_cover_features()
 	var second_side := _other(starting_side)
 	var holder := ""
@@ -82,6 +86,19 @@ func _decide_first_side() -> String:
 	var side := CombatUnit.SIDE_INVADER if roll <= 50 else CombatUnit.SIDE_DEFENDER
 	events.append({"type": "initiative", "roll": roll, "side": side})
 	return side
+
+
+## Rolls each unit's cover from the terrain, invaders first, in roster order.
+func _roll_starting_cover() -> void:
+	if terrain_id == "":
+		return
+	var cover_mix: Dictionary = data.terrain_entry(terrain_id)["cover_mix"]
+	var rolls: Array[Dictionary] = []
+	for unit in invaders + defenders:
+		var roll := dice.percent()
+		unit.cover = CombatRules.cover_from_roll(roll, cover_mix)
+		rolls.append({"unit": unit.unit_name, "side": unit.side, "roll": roll, "cover": unit.cover})
+	events.append({"type": "cover_rolls", "terrain": terrain_id, "mix": cover_mix, "rolls": rolls})
 
 
 ## Rolls which unit stands behind each cover feature, after the first-turn roll.
