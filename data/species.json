@@ -1,0 +1,27 @@
+{
+  "_about": "Invader species at research tier 0. Mobility = tiles per move action. Drones are machines: no Morale (will 0).",
+  "vessel": {
+    "name": "Vessel", "health": 5, "aim": 55, "defense": 0, "mobility": 6, "will": 30, "armour": 0,
+    "weapon": "shard_carbine", "abilities": ["swarm"], "unlock_tier": 0
+  },
+  "drone": {
+    "name": "Drone", "health": 4, "aim": 50, "defense": 20, "mobility": 7, "will": 0, "armour": 0,
+    "weapon": "shard_carbine", "abilities": ["repair", "machine"], "unlock_tier": 0
+  },
+  "warden": {
+    "name": "Warden", "health": 8, "aim": 65, "defense": 5, "mobility": 5, "will": 50, "armour": 1,
+    "weapon": "pulse_rifle", "abilities": ["steady"], "unlock_tier": 1
+  },
+  "strider": {
+    "name": "Strider", "health": 7, "aim": 60, "defense": 10, "mobility": 8, "will": 45, "armour": 0,
+    "weapon": "arc_scattergun", "abilities": ["hit_and_run"], "unlock_tier": 2
+  },
+  "harrow": {
+    "name": "Harrow", "health": 9, "aim": 60, "defense": 10, "mobility": 5, "will": 90, "armour": 1,
+    "weapon": "pulse_rifle", "abilities": ["rally", "mind_spike"], "unlock_tier": 3
+  },
+  "bulwark": {
+    "name": "Bulwark", "health": 12, "aim": 55, "defense": 0, "mobility": 4, "will": 70, "armour": 2,
+    "weapon": "siege_lance", "abilities": ["plated"], "unlock_tier": 3
+  }
+}

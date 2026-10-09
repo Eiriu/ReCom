@@ -1,0 +1,12 @@
+{
+  "_about": "Core combat numbers from the Combat core spec. Change these to tune; no code changes needed.",
+  "hit_clamp": [5, 95],
+  "cover": { "none": 0, "half": 20, "full": 40 },
+  "range_bonus_optimal": 10,
+  "range_penalty_per_band": 15,
+  "wounded_aim_penalty": 10,
+  "crit_multiplier": 1.5,
+  "flank_crit_bonus": 50,
+  "min_damage": 1,
+  "round_limit": 12
+}

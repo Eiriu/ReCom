@@ -1,0 +1,15 @@
+{
+  "_about": "Defender soldier grades at research tier 0. downed_chance = % chance a soldier at 0 Health is downed (capturable) instead of killed.",
+  "green": {
+    "name": "Green", "health": 6, "aim": 55, "defense": 0, "mobility": 6, "will": 40, "armour": 0,
+    "downed_chance": 20
+  },
+  "regular": {
+    "name": "Regular", "health": 8, "aim": 65, "defense": 0, "mobility": 6, "will": 50, "armour": 0,
+    "downed_chance": 25
+  },
+  "veteran": {
+    "name": "Veteran", "health": 10, "aim": 75, "defense": 10, "mobility": 7, "will": 70, "armour": 1,
+    "downed_chance": 30
+  }
+}

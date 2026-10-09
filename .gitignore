@@ -1,0 +1,8 @@
+# Godot's local cache. It is rebuilt when you open the project.
+.godot/
+
+# Exports and OS clutter
+/build/
+*.tmp
+.DS_Store
+Thumbs.db

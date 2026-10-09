@@ -1,0 +1,35 @@
+{
+  "_about": "Tier-0 weapons. damage = [min, max]. optimal = range bands with +10 Aim; each band outside costs -15. tags: suppress, no_move_and_fire, no_overwatch.",
+  "shard_carbine": {
+    "name": "Shard carbine", "short_name": "Carbine", "side": "invader",
+    "damage": [2, 4], "crit": 10, "optimal": ["close", "medium"], "tags": []
+  },
+  "pulse_rifle": {
+    "name": "Pulse rifle", "short_name": "Pulse", "side": "invader",
+    "damage": [3, 5], "crit": 10, "optimal": ["medium"], "tags": []
+  },
+  "arc_scattergun": {
+    "name": "Arc scattergun", "short_name": "Scatter", "side": "invader",
+    "damage": [4, 7], "crit": 20, "optimal": ["close"], "tags": []
+  },
+  "siege_lance": {
+    "name": "Siege lance", "short_name": "Lance", "side": "invader",
+    "damage": [6, 9], "crit": 0, "optimal": ["medium", "long"], "tags": ["no_overwatch"]
+  },
+  "assault_rifle": {
+    "name": "Assault rifle", "short_name": "Rifle", "side": "defender",
+    "damage": [3, 5], "crit": 10, "optimal": ["medium"], "tags": []
+  },
+  "shotgun": {
+    "name": "Shotgun", "short_name": "Shotgun", "side": "defender",
+    "damage": [4, 7], "crit": 20, "optimal": ["close"], "tags": []
+  },
+  "sniper_rifle": {
+    "name": "Sniper rifle", "short_name": "Sniper", "side": "defender",
+    "damage": [4, 6], "crit": 25, "optimal": ["long"], "tags": ["no_move_and_fire"]
+  },
+  "machine_gun": {
+    "name": "Machine gun", "short_name": "MG", "side": "defender",
+    "damage": [3, 5], "crit": 0, "optimal": ["medium"], "tags": ["suppress"]
+  }
+}
