@@ -31,3 +31,12 @@ than silently picking one.
 - Before pushing: `godot --headless --path . --import`, then
   `godot --headless --path . --script res://tests/run_tests.gd` must pass. Add tests for
   every new rule.
+- **Small changes need numbers, not feelings.** After any change to `core/` or `data/`, run
+  `tools/compare.gd` and `tools/golden.gd` (see README, "Checking a change") and report what
+  moved: the flagged rows, how many winners changed, how many golden battles changed. Say so
+  plainly when the change is within chance. If the result is "identical", the change had no
+  effect on any battle; say that too. Only save a new baseline or record new golden copies
+  after Nick has accepted the differences, and commit them together with the change.
+- Use a fresh, context-free reviewer for a batch of several small changes, or for anything that
+  touches `CombatRules`, `Dice` or the order of dice rolls (these can silently break seed replay).
+  Pure data-number changes are covered by `compare.gd` and need no reviewer.

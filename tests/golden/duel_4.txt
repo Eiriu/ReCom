@@ -1,0 +1,22 @@
+Seed 4 · Open ground, one tree · Duel
+
+Invaders  Warden-1  Warden, Pulse rifle, 8 Health
+Defender  Rifle-1   Regular, Assault rifle, 8 Health
+
+First turn: Defender (rolled 98; Invaders start on 50 or less)
+Tree: Rifle-1 stands behind it, Half cover (rolled 2 of 1–2)
+
+Round 1 — Defender
+  Rifle-1  shoots Warden-1 (no cover, Medium): 70% [Aim 65, Defense −5, range +10], rolled 51 — HIT, 3 dmg (rolled 4, −1 armour) → Warden-1 5/8 · best attack
+
+Round 1 — Invaders
+  Warden-1 shoots Rifle-1 (Half cover, Medium): 55% [Aim 65, cover −20, range +10], rolled 52 — HIT, 3 dmg (rolled 3) → Rifle-1 5/8 · best attack
+
+Round 2 — Defender
+  Rifle-1  shoots Warden-1 (no cover, Medium): 70% [Aim 65, Defense −5, range +10], rolled 50 — HIT, crit (rolled 10, needed 10 or less), 6 dmg (rolled 5 ×1.5, −1 armour) → Warden-1 killed · best attack
+
+Result: Defender holds the field after round 2 (no enemy able to fight)
+Losses: Invaders 1 killed · Defender none
+
+Invaders  Warden-1  killed
+Defender  Rifle-1   5/8 Health

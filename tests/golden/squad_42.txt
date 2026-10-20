@@ -1,0 +1,91 @@
+Seed 42 · Test field · 2 Wardens, 2 Striders vs Defender squad
+
+Invaders  Warden-1   Warden, Pulse rifle, 8 Health
+Invaders  Warden-2   Warden, Pulse rifle, 8 Health
+Invaders  Strider-1  Strider, Arc scattergun, 7 Health
+Invaders  Strider-2  Strider, Arc scattergun, 7 Health
+Defender  Rifle-1    Regular, Assault rifle, 8 Health
+Defender  Rifle-2    Regular, Assault rifle, 8 Health
+Defender  Shotgun-1  Regular, Shotgun, 8 Health
+Defender  MG-1       Regular, Machine gun, 8 Health
+
+First turn: Invaders (rolled 18; Invaders start on 50 or less)
+Cover (Full on 1–15, Half on 16–40, None above):
+  Invaders  Warden-1 Half (29), Warden-2 Half (21), Strider-1 Half (16), Strider-2 Half (33)
+  Defender  Rifle-1 None (57), Rifle-2 None (99), Shotgun-1 Full (4), MG-1 Full (10)
+
+Round 1 — Invaders
+  Strider-1 shoots Rifle-1 (no cover, Medium): 45% [Aim 60, range −15], rolled 52 — miss · best attack
+  Strider-2 shoots Rifle-1 (no cover, Medium): 45% [Aim 60, range −15], rolled 28 — HIT, 5 dmg (rolled 5) → Rifle-1 3/8, now Wounded · best attack
+  Warden-1  shoots Rifle-1 (no cover, Medium): 75% [Aim 65, range +10], rolled 38 — HIT, 4 dmg (rolled 4) → Rifle-1 killed (downed roll 52, needed 25 or less) · finish off
+  Warden-2  shoots Rifle-2 (no cover, Medium): 75% [Aim 65, range +10], rolled 42 — HIT, 5 dmg (rolled 5) → Rifle-2 3/8, now Wounded · best attack
+
+Round 1 — Defender
+  Rifle-2   shoots Strider-1 (Half cover, Medium): 35% [Aim 65, Defense −10, cover −20, range +10, wounded −10], rolled 84 — miss · best attack, below threshold
+  Shotgun-1 shoots Warden-1 (Half cover, Medium): 25% [Aim 65, Defense −5, cover −20, range −15], rolled 82 — miss · best attack, below threshold
+  MG-1      shoots Strider-1 (Half cover, Medium): 45% [Aim 65, Defense −10, cover −20, range +10], rolled 100 — miss · best attack
+
+Round 2 — Invaders
+  Strider-1 shoots Rifle-2 (no cover, Medium): 45% [Aim 60, range −15], rolled 59 — miss · best attack, below threshold
+  Strider-2 shoots Rifle-2 (no cover, Medium): 45% [Aim 60, range −15], rolled 5 — HIT, 7 dmg (rolled 7) → Rifle-2 killed (downed roll 76, needed 25 or less) · best attack, below threshold
+  Warden-1  shoots Shotgun-1 (Full cover, Medium): 35% [Aim 65, cover −40, range +10], rolled 62 — miss · best attack, below threshold
+  Warden-2  shoots Shotgun-1 (Full cover, Medium): 35% [Aim 65, cover −40, range +10], rolled 16 — HIT, 3 dmg (rolled 3) → Shotgun-1 5/8 · best attack, below threshold
+
+Round 2 — Defender
+  Shotgun-1 shoots Warden-1 (Half cover, Medium): 25% [Aim 65, Defense −5, cover −20, range −15], rolled 78 — miss · best attack, below threshold
+  MG-1      shoots Strider-1 (Half cover, Medium): 45% [Aim 65, Defense −10, cover −20, range +10], rolled 60 — miss · best attack
+
+Round 3 — Invaders
+  Strider-1 shoots MG-1 (Full cover, Medium): 5% [Aim 60, cover −40, range −15], rolled 13 — miss · best attack, below threshold
+  Strider-2 shoots MG-1 (Full cover, Medium): 5% [Aim 60, cover −40, range −15], rolled 68 — miss · best attack, below threshold
+  Warden-1  shoots MG-1 (Full cover, Medium): 35% [Aim 65, cover −40, range +10], rolled 35 — HIT, 5 dmg (rolled 5) → MG-1 3/8, now Wounded · best attack, below threshold
+  Warden-2  shoots Shotgun-1 (Full cover, Medium): 35% [Aim 65, cover −40, range +10], rolled 74 — miss · best attack, below threshold
+
+Round 3 — Defender
+  Shotgun-1 shoots Warden-1 (Half cover, Medium): 25% [Aim 65, Defense −5, cover −20, range −15], rolled 55 — miss · best attack, below threshold
+  MG-1      shoots Strider-1 (Half cover, Medium): 35% [Aim 65, Defense −10, cover −20, range +10, wounded −10], rolled 7 — HIT, 3 dmg (rolled 3) → Strider-1 4/7 · best attack, below threshold
+
+Round 4 — Invaders
+  Strider-1 shoots Shotgun-1 (Full cover, Medium): 5% [Aim 60, cover −40, range −15], rolled 90 — miss · best attack, below threshold
+  Strider-2 shoots Shotgun-1 (Full cover, Medium): 5% [Aim 60, cover −40, range −15], rolled 16 — miss · best attack, below threshold
+  Warden-1  shoots Shotgun-1 (Full cover, Medium): 35% [Aim 65, cover −40, range +10], rolled 48 — miss · best attack, below threshold
+  Warden-2  shoots Shotgun-1 (Full cover, Medium): 35% [Aim 65, cover −40, range +10], rolled 25 — HIT, 3 dmg (rolled 3) → Shotgun-1 2/8, now Wounded · best attack, below threshold
+
+Round 4 — Defender
+  Shotgun-1 shoots Warden-1 (Half cover, Medium): 15% [Aim 65, Defense −5, cover −20, range −15, wounded −10], rolled 51 — miss · best attack, below threshold
+  MG-1      shoots Strider-2 (Half cover, Medium): 35% [Aim 65, Defense −10, cover −20, range +10, wounded −10], rolled 35 — HIT, 5 dmg (rolled 5) → Strider-2 2/7, now Wounded · best attack, below threshold
+
+Round 5 — Invaders
+  Strider-1 shoots MG-1 (Full cover, Medium): 5% [Aim 60, cover −40, range −15], rolled 91 — miss · best attack, below threshold
+  Strider-2 shoots MG-1 (Full cover, Medium): 5% [Aim 60, cover −40, range −15, wounded −10 = -5, limited to 5], rolled 17 — miss · best attack, below threshold
+  Warden-1  shoots MG-1 (Full cover, Medium): 35% [Aim 65, cover −40, range +10], rolled 19 — HIT, 5 dmg (rolled 5) → MG-1 downed (rolled 21, needed 25 or less) · best attack, below threshold
+  Warden-2  shoots Shotgun-1 (Full cover, Medium): 35% [Aim 65, cover −40, range +10], rolled 48 — miss · best attack, below threshold
+
+Round 5 — Defender
+  Shotgun-1 shoots Warden-1 (Half cover, Medium): 15% [Aim 65, Defense −5, cover −20, range −15, wounded −10], rolled 97 — miss · best attack, below threshold
+
+Round 6 — Invaders
+  Strider-1 shoots Shotgun-1 (Full cover, Medium): 5% [Aim 60, cover −40, range −15], rolled 32 — miss · best attack, below threshold
+  Strider-2 shoots Shotgun-1 (Full cover, Medium): 5% [Aim 60, cover −40, range −15, wounded −10 = -5, limited to 5], rolled 48 — miss · best attack, below threshold
+  Warden-1  shoots Shotgun-1 (Full cover, Medium): 35% [Aim 65, cover −40, range +10], rolled 68 — miss · best attack, below threshold
+  Warden-2  shoots Shotgun-1 (Full cover, Medium): 35% [Aim 65, cover −40, range +10], rolled 74 — miss · best attack, below threshold
+
+Round 6 — Defender
+  Shotgun-1 shoots Warden-1 (Half cover, Medium): 15% [Aim 65, Defense −5, cover −20, range −15, wounded −10], rolled 71 — miss · best attack, below threshold
+
+Round 7 — Invaders
+  Strider-1 shoots Shotgun-1 (Full cover, Medium): 5% [Aim 60, cover −40, range −15], rolled 87 — miss · best attack, below threshold
+  Strider-2 shoots Shotgun-1 (Full cover, Medium): 5% [Aim 60, cover −40, range −15, wounded −10 = -5, limited to 5], rolled 98 — miss · best attack, below threshold
+  Warden-1  shoots Shotgun-1 (Full cover, Medium): 35% [Aim 65, cover −40, range +10], rolled 21 — HIT, 3 dmg (rolled 3) → Shotgun-1 killed (downed roll 77, needed 25 or less) · best attack, below threshold
+
+Result: Invaders hold the field after round 7 (no enemy able to fight)
+Losses: Invaders none · Defender 3 killed, 1 downed (captured)
+
+Invaders  Warden-1   8/8 Health
+Invaders  Warden-2   8/8 Health
+Invaders  Strider-1  4/7 Health
+Invaders  Strider-2  2/7 Health, Wounded
+Defender  Rifle-1    killed
+Defender  Rifle-2    killed
+Defender  Shotgun-1  killed
+Defender  MG-1       downed, captured

@@ -45,6 +45,36 @@ slice 1.3, when units can move.
 To report a problem, press **Copy report** and paste it into the chat. The seed at the top
 lets the battle be replayed exactly.
 
+## Checking a change (small ones too)
+
+A single battle cannot show a small rule or number change, so two tools replay the same
+battles before and after. Both use fixed seeds, so the same code always gives the same result.
+
+**1. Did the change move the statistics?**
+
+    godot --headless --path . --script res://tools/compare.gd
+
+Fights 1000 battles per scenario and compares them with the saved baseline
+(`tests/baseline.json`), battle by battle. It prints before, after and change for win rates,
+losses, battle length and the first-turn advantage, and how many battles ended with a
+different winner. `**` means clearly more than chance, `*` probably, blank means chance.
+If nothing changed it says "Identical to the baseline". For very small changes use
+`-- --count=5000` (the baseline's own seeds are reused for the first 1000).
+
+**2. Which battles moved, and how?**
+
+    godot --headless --path . --script res://tools/golden.gd -- --diff
+
+Replays 12 fixed battles and compares each report with the saved copy in `tests/golden/`.
+A small change should alter a few lines in a few battles. If every battle is rewritten
+completely, something bigger than intended changed.
+
+**After you have looked at the differences and accept them**, save the new reference points
+and commit them with the change:
+
+    godot --headless --path . --script res://tools/compare.gd -- --save --note="what changed"
+    godot --headless --path . --script res://tools/golden.gd -- --record
+
 ## Changing numbers
 
 All numbers are in the `data/` folder as plain text (JSON). You can edit them in any text
@@ -61,6 +91,8 @@ the effect. Keep the commas and quotes as they are.
   (add `--scenario=duel` for the duel)
 - `tools/run_battle.gd` — prints a battle without a window:
   `godot --headless --path . --script res://tools/run_battle.gd -- --seed=48213`
+- `tools/compare.gd` — before/after batch statistics against `tests/baseline.json` (see above).
+- `tools/golden.gd` — replays fixed battles against `tests/golden/` (see above).
 - `tests/run_tests.gd` — automated checks:
   `godot --headless --path . --script res://tests/run_tests.gd`
 
