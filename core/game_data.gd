@@ -13,6 +13,7 @@ var species: Dictionary = {}
 var defender_grades: Dictionary = {}
 var squads: Dictionary = {}
 var terrains: Dictionary = {}
+var matchups: Dictionary = {}
 
 
 static func load_default() -> GameData:
@@ -23,6 +24,7 @@ static func load_default() -> GameData:
 	data.defender_grades = _load_json("defender_grades.json")
 	data.squads = _load_json("squads.json")
 	data.terrains = _load_json("terrains.json")
+	data.matchups = _load_json("matchups.json")
 	return data
 
 
@@ -65,6 +67,13 @@ func squad_entry(id: String) -> Dictionary:
 		push_error("Unknown squad id: %s" % id)
 		return {}
 	return squads[id]
+
+
+func matchup_entry(id: String) -> Dictionary:
+	if not matchups.has(id):
+		push_error("Unknown matchup id: %s" % id)
+		return {}
+	return matchups[id]
 
 
 func terrain_entry(id: String) -> Dictionary:

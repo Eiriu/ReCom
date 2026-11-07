@@ -10,9 +10,64 @@
   "min_damage": 1,
   "round_limit": 12,
   "actions_per_turn": 2,
+  "reaction_aim_penalty": 15,
+  "flank": {
+    "_about": "Flank chance = terrain flank_base + per_mobility x (Mobility - mobility_pivot) + the terrain's band_modifier, limited to clamp.",
+    "per_mobility": 5,
+    "mobility_pivot": 5,
+    "clamp": [0, 60]
+  },
+  "suppression": {
+    "_about": "Suppressed units take -aim_penalty Aim, reduced by 1 for every will_per_point Will above will_threshold.",
+    "aim_penalty": 30,
+    "will_threshold": 50,
+    "will_per_point": 2
+  },
+  "morale": {
+    "_about": "Morale starts at Will. Shaken below shaken_below, Broken (flees) at broken_at or below. Gains stop at Will + cap_over_will.",
+    "shaken_below": 25,
+    "broken_at": 0,
+    "shaken_aim_penalty": 15,
+    "cap_over_will": 20,
+    "events": {
+      "ally_down": -10,
+      "harrow_down": -20,
+      "wounded": -10,
+      "crit_taken": -5,
+      "suppressed_turn": -5,
+      "kill": 5,
+      "rallied": 20
+    }
+  },
+  "abilities": {
+    "_about": "Innate abilities (Combat core spec, Stat blocks and Morale and psionics). rally_every = side turns between Rallies (2 = every other turn).",
+    "swarm_per_ally": 5,
+    "swarm_max": 15,
+    "repair_amount": 3,
+    "repair_uses": 2,
+    "rally_aim": 5,
+    "rally_every": 2,
+    "mind_spike_morale": 40,
+    "mind_spike_base": 50,
+    "mind_spike_clamp": [5, 95]
+  },
+  "recovery": {
+    "_about": "When the invaders hold the field, each dead invader has this % chance to be recovered alive and Injured.",
+    "default": 25,
+    "drone": 50
+  },
+  "withdrawal": {
+    "_about": "A side withdraws once it has lost lost_fraction of its starting units and is outnumbered outnumbered_ratio to one.",
+    "lost_fraction": 0.5,
+    "outnumbered_ratio": 2
+  },
   "ai": {
-    "_about": "AI decision thresholds (Combat core spec, AI decision rules).",
+    "_about": "AI decision thresholds (Combat core spec, AI decision rules). flank_counts_fallback_shot: score a failed flank as the plain shot the unit still gets (false = spec wording). cap_damage_at_health: count no damage beyond the target's Health when scoring (false = spec wording).",
     "finish_off_min_hit": 50,
-    "best_attack_min_score": 1.5
+    "best_attack_min_score": 1.5,
+    "rally_min_allies": 2,
+    "mind_spike_min_chance": 50,
+    "flank_counts_fallback_shot": false,
+    "cap_damage_at_health": false
   }
 }

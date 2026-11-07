@@ -1,31 +1,45 @@
 {
-  "_about": "Terrain profiles (Combat core spec, The simulated battlefield). cover_mix = % chance of Full / Half / None cover per unit roll. band_modifier and in_transit_cover arrive with movement in slice 1.3.",
+  "_about": "Terrain profiles (Combat core spec, The simulated battlefield). cover_mix = % chance of Full / Half / None per cover roll. starting_band = where both sides start. flank_base = flank chance before Mobility. band_modifier = flank chance adjustment by the flanker's band (starts at 0). in_transit_cover = cover mix for a unit caught moving by a reaction shot (starts at half the Full and Half shares, rounded down).",
   "test_field": {
-    "name": "Test field", "cover_mix": { "full": 15, "half": 25, "none": 60 },
-    "starting_band": "medium", "flank_base": 15
+    "name": "Test field", "starting_band": "medium", "flank_base": 15,
+    "cover_mix": { "full": 15, "half": 25, "none": 60 },
+    "in_transit_cover": { "full": 7, "half": 12, "none": 81 },
+    "band_modifier": { "close": 0, "medium": 0, "long": 0 }
   },
   "urban": {
-    "name": "Urban", "cover_mix": { "full": 40, "half": 40, "none": 20 },
-    "starting_band": "medium", "flank_base": 25
+    "name": "Urban", "starting_band": "medium", "flank_base": 25,
+    "cover_mix": { "full": 40, "half": 40, "none": 20 },
+    "in_transit_cover": { "full": 20, "half": 20, "none": 60 },
+    "band_modifier": { "close": 0, "medium": 0, "long": 0 }
   },
   "forest": {
-    "name": "Forest", "cover_mix": { "full": 20, "half": 60, "none": 20 },
-    "starting_band": "close", "flank_base": 30
+    "name": "Forest", "starting_band": "close", "flank_base": 30,
+    "cover_mix": { "full": 20, "half": 60, "none": 20 },
+    "in_transit_cover": { "full": 10, "half": 30, "none": 60 },
+    "band_modifier": { "close": 0, "medium": 0, "long": 0 }
   },
   "farmland": {
-    "name": "Farmland", "cover_mix": { "full": 15, "half": 35, "none": 50 },
-    "starting_band": "long", "flank_base": 15
+    "name": "Farmland", "starting_band": "long", "flank_base": 15,
+    "cover_mix": { "full": 15, "half": 35, "none": 50 },
+    "in_transit_cover": { "full": 7, "half": 17, "none": 76 },
+    "band_modifier": { "close": 0, "medium": 0, "long": 0 }
   },
   "desert": {
-    "name": "Desert", "cover_mix": { "full": 10, "half": 30, "none": 60 },
-    "starting_band": "long", "flank_base": 10
+    "name": "Desert", "starting_band": "long", "flank_base": 10,
+    "cover_mix": { "full": 10, "half": 30, "none": 60 },
+    "in_transit_cover": { "full": 5, "half": 15, "none": 80 },
+    "band_modifier": { "close": 0, "medium": 0, "long": 0 }
   },
   "base_interior": {
-    "name": "Base interior", "cover_mix": { "full": 40, "half": 30, "none": 30 },
-    "starting_band": "close", "flank_base": 20
+    "name": "Base interior", "starting_band": "close", "flank_base": 20,
+    "cover_mix": { "full": 40, "half": 30, "none": 30 },
+    "in_transit_cover": { "full": 20, "half": 15, "none": 65 },
+    "band_modifier": { "close": 0, "medium": 0, "long": 0 }
   },
   "crash_site": {
-    "name": "Crash site", "cover_mix": { "full": 30, "half": 40, "none": 30 },
-    "starting_band": "medium", "flank_base": 25
+    "name": "Crash site", "starting_band": "medium", "flank_base": 25,
+    "cover_mix": { "full": 30, "half": 40, "none": 30 },
+    "in_transit_cover": { "full": 15, "half": 20, "none": 65 },
+    "band_modifier": { "close": 0, "medium": 0, "long": 0 }
   }
 }

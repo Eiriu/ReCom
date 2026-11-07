@@ -7,6 +7,7 @@ extends SceneTree
 ##   godot --headless --path . --script res://tools/compare.gd -- --save --note="cover 20 to 25"
 ##                                                                         save the current numbers as the new baseline
 ##   godot --headless --path . --script res://tools/compare.gd -- --count=5000          more battles, finer sensitivity
+## Every scenario is measured: the duel and each matchup in data/matchups.json (about 30 s).
 ##
 ## How to read the result:
 ##   The same seeds are used every time, so a change that does not touch any dice roll
@@ -21,7 +22,6 @@ extends SceneTree
 ## Save a new baseline only after you have looked at the changes and accepted them.
 
 const BASELINE_PATH := "res://tests/baseline.json"
-const SCENARIOS: Array[String] = ["squad", "duel"]
 const DEFAULT_COUNT := 1000
 const DEFAULT_START := 1
 const Z_CLEAR := 3.0
@@ -38,9 +38,9 @@ const METRICS := [
 	["invader_win_first", "  when invaders go first (%)", 100.0, 1],
 	["invader_win_second", "  when defender goes first (%)", 100.0, 1],
 	["rounds", "Battle length (rounds)", 1.0, 2],
-	["invaders_lost", "Invaders lost per battle", 1.0, 2],
-	["defenders_lost", "Defenders lost per battle", 1.0, 2],
-	["invaders_lost_in_win", "Invaders lost per won battle", 1.0, 2],
+	["invaders_lost", "Invaders killed per battle", 1.0, 2],
+	["defenders_lost", "Defenders out of action per battle", 1.0, 2],
+	["invaders_lost_in_win", "Invaders killed per won battle", 1.0, 2],
 	["captures_in_win", "Defenders captured per won battle", 1.0, 2],
 	["round_limit", "Ended by round limit (%)", 100.0, 1],
 ]
@@ -62,19 +62,20 @@ func _initialize() -> void:
 			start = int(arg.trim_prefix("--start="))
 
 	var data := GameData.load_default()
+	var scenarios := Scenarios.ids(data)
 
 	if save:
 		count = DEFAULT_COUNT if count < 0 else count
 		start = DEFAULT_START if start < 0 else start
 		var baseline := {"count": count, "start": start, "note": note,
 			"saved": Time.get_datetime_string_from_system(), "scenarios": {}}
-		for scenario in SCENARIOS:
+		for scenario in scenarios:
 			baseline["scenarios"][scenario] = _measure(scenario, data, start, count)
 		var file := FileAccess.open(BASELINE_PATH, FileAccess.WRITE)
 		file.store_string(JSON.stringify(baseline, "\t"))
 		file.close()
 		print("Saved baseline: %d battles per scenario, seeds %d-%d. Commit tests/baseline.json." % [count, start, start + count - 1])
-		for scenario in SCENARIOS:
+		for scenario in scenarios:
 			_print_snapshot(baseline["scenarios"][scenario])
 		quit()
 		return
@@ -92,7 +93,7 @@ func _initialize() -> void:
 		" \"%s\" saved %s" % [baseline["note"], baseline["saved"]] if String(baseline["note"]) != "" else " saved %s" % baseline["saved"]])
 
 	var anything_moved := false
-	for scenario in SCENARIOS:
+	for scenario in scenarios:
 		if not baseline["scenarios"].has(scenario):
 			print("\n%s: not in the baseline, save a new one." % scenario)
 			continue
@@ -114,9 +115,9 @@ func _measure(scenario: String, data: GameData, start: int, count: int) -> Dicti
 	var title := ""
 	for seed_value in range(start, start + count):
 		var result := Scenarios.build(scenario, data, seed_value).run()
-		title = String(result["title"])
+		title = Scenarios.display_name(scenario, data)
 		var won: bool = result["holder"] == CombatUnit.SIDE_INVADER
-		var invaders_lost := _out_of_action(result["invaders"])
+		var invaders_lost := _killed(result["invaders"])
 		var defenders_lost := _out_of_action(result["defenders"])
 		var win_value := 1.0 if won else 0.0
 		var invaders_first: bool = result["first_side"] == CombatUnit.SIDE_INVADER
@@ -161,6 +162,15 @@ func _add(acc: Dictionary, key: String, value: float) -> void:
 	acc[key][0] += 1.0
 	acc[key][1] += value
 	acc[key][2] += value * value
+
+
+## Invaders killed and not recovered alive: the losses the spec's 1.5 target counts.
+func _killed(units: Array) -> int:
+	var count := 0
+	for unit: Dictionary in units:
+		if int(unit["state"]) == CombatUnit.State.DEAD and not unit.get("recovered", false):
+			count += 1
+	return count
 
 
 func _out_of_action(units: Array) -> int:

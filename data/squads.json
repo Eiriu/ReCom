@@ -20,6 +20,10 @@
     "name": "4 Wardens", "side": "invader",
     "species": ["warden", "warden", "warden", "warden"]
   },
+  "wardens_and_harrow": {
+    "name": "4 Wardens, 1 Harrow", "side": "invader",
+    "species": ["warden", "warden", "warden", "warden", "harrow"]
+  },
   "vessel_swarm": {
     "name": "6 Vessels, 1 Drone", "side": "invader",
     "species": ["vessel", "vessel", "vessel", "vessel", "vessel", "vessel", "drone"]

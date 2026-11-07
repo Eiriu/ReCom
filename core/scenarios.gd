@@ -1,61 +1,81 @@
 class_name Scenarios
 extends RefCounted
-## Ready-made battles for testing. Both the screen and the headless runners use
-## these, so they always fight exactly the same setup.
+## Ready-made battles for testing. The screen, the tests and the headless tools
+## all use these, so they always fight exactly the same setup.
+## Matchups live in data/matchups.json; the duel is the slice 1.1 test.
 
 const DUEL := "duel"
 const SQUAD := "squad"
 
-## Names shown on the screen, by scenario id.
-const NAMES := {
-	DUEL: "Duel (slice 1.1)",
-	SQUAD: "Squad battle (slice 1.2)",
-}
+
+## Every scenario id: the duel, then the matchups in file order.
+static func ids(data: GameData) -> Array[String]:
+	var out: Array[String] = [DUEL]
+	out.append_array(GameData.entry_ids(data.matchups))
+	return out
+
+
+## Matchup ids that have a spec win-rate target, in file order.
+static func target_ids(data: GameData) -> Array[String]:
+	var out: Array[String] = []
+	for id in GameData.entry_ids(data.matchups):
+		if data.matchups[id].has("target"):
+			out.append(id)
+	return out
+
+
+static func display_name(id: String, data: GameData) -> String:
+	if id == DUEL:
+		return "Duel (slice 1.1)"
+	return String(data.matchup_entry(id).get("name", id))
 
 
 static func build(id: String, data: GameData, seed_value: int) -> Battle:
-	match id:
-		DUEL:
-			return duel(data, seed_value)
-		SQUAD:
-			return squad_battle(data, seed_value)
-	push_error("Unknown scenario: %s" % id)
-	return duel(data, seed_value)
+	if id == DUEL:
+		return duel(data, seed_value)
+	if not data.matchups.has(id):
+		push_error("Unknown scenario: %s" % id)
+		return duel(data, seed_value)
+	var m := data.matchup_entry(id)
+	return matchup(data, seed_value, String(m["invaders"]), String(m["opposition"]),
+		String(m["terrain"]), String(m.get("stance", Battle.STANCE_STANDARD)), String(m.get("first_side", "attacker")))
 
 
-## Slice 1.1: one Warden against one Regular with an assault rifle,
-## at Medium range, with one tree in the middle. The seed decides who shoots
-## first and who stands behind the tree (Half cover).
+## Slice 1.1: one Warden against one Regular with an assault rifle, at Medium
+## range, with one tree in the middle. The seed decides who shoots first and who
+## stands behind the tree (Half cover). Since slice 1.3 they can move and flank.
 static func duel(data: GameData, seed_value: int) -> Battle:
 	var battle := Battle.new(data, seed_value)
 	battle.first_side = Battle.FIRST_SIDE_RANDOM
 	battle.title = "Duel"
 	battle.location = "Open ground, one tree"
+	battle.terrain_id = "test_field"
+	battle.roll_starting_cover = false
 	battle.cover_features.append({"name": "tree", "cover": "half"})
-
-	var warden := CombatUnit.from_species("warden", "Warden-1", data)
-	var rifle := CombatUnit.from_grade("regular", "assault_rifle", "Rifle-1", data)
-	for unit in [warden, rifle]:
-		unit.band = "medium"
-		unit.cover = "none"
-
-	battle.invaders.append(warden)
-	battle.defenders.append(rifle)
+	battle.invaders.append(CombatUnit.from_species("warden", "Warden-1", data))
+	battle.defenders.append(CombatUnit.from_grade("regular", "assault_rifle", "Rifle-1", data))
 	return battle
 
 
-## Slice 1.2: 2 Wardens and 2 Striders against a Defender squad of 4 Regulars,
-## at Medium range on the test field. The seed decides who goes first and each
-## unit's cover (15% Full, 25% Half, 60% None). Range bands arrive in slice 1.3.
-static func squad_battle(data: GameData, seed_value: int,
-		invader_squad: String = "wardens_and_striders", defender_squad: String = "defender_squad") -> Battle:
+## Any invader squad against any opposition on any terrain.
+## first_side: "attacker" (spec rule: the invaders attack, so they go first),
+## "random", or a side id.
+static func matchup(data: GameData, seed_value: int, invader_squad: String, opposition: String,
+		terrain_id: String, stance: String = Battle.STANCE_STANDARD, first_side: String = "attacker") -> Battle:
 	var battle := Battle.new(data, seed_value)
-	battle.first_side = Battle.FIRST_SIDE_RANDOM
-	battle.title = "%s vs %s" % [data.squad_entry(invader_squad)["name"], data.squad_entry(defender_squad)["name"]]
-	battle.terrain_id = "test_field"
-	battle.location = String(data.terrain_entry("test_field")["name"])
+	match first_side:
+		"attacker":
+			battle.first_side = CombatUnit.SIDE_INVADER
+		"random":
+			battle.first_side = Battle.FIRST_SIDE_RANDOM
+		_:
+			battle.first_side = first_side
+	battle.invader_stance = stance
+	battle.terrain_id = terrain_id
+	battle.title = "%s vs %s" % [data.squad_entry(invader_squad)["name"], data.squad_entry(opposition)["name"]]
+	battle.location = String(data.terrain_entry(terrain_id)["name"])
 	battle.invaders = build_squad(invader_squad, data)
-	battle.defenders = build_squad(defender_squad, data)
+	battle.defenders = build_squad(opposition, data)
 	return battle
 
 
@@ -74,10 +94,16 @@ static func build_squad(id: String, data: GameData) -> Array[CombatUnit]:
 		for weapon_id: Variant in entry["weapons"]:
 			var base := String(data.weapon(String(weapon_id))["short_name"])
 			units.append(CombatUnit.from_grade(grade, String(weapon_id), _next_name(base, counts), data))
-	for unit in units:
-		unit.band = "medium"
-		unit.cover = "none"
 	return units
+
+
+## Squad ids for one side, in file order.
+static func squad_ids(data: GameData, side: String) -> Array[String]:
+	var out: Array[String] = []
+	for id in GameData.entry_ids(data.squads):
+		if String(data.squads[id]["side"]) == side:
+			out.append(id)
+	return out
 
 
 static func _next_name(base: String, counts: Dictionary) -> String:

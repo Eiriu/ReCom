@@ -1,5 +1,5 @@
 extends SceneTree
-## Replays a fixed set of battles and compares each report with the saved copy
+## Replays a fixed set of battles (two per matchup, plus extra squad and duel seeds) and compares each report with the saved copy
 ## in tests/golden/. Use it after every change to see exactly which battles moved.
 ##
 ## Usage (from the project folder):
@@ -15,10 +15,12 @@ extends SceneTree
 ## looked at the differences and are happy, run --record and commit the new files.
 
 const GOLDEN_DIR := "res://tests/golden"
-const CASES := [
-	{"scenario": "squad", "seeds": [1, 2, 3, 7, 42, 100, 1001, 48213]},
+## Two fixed seeds for every matchup in data/matchups.json, plus these.
+const EXTRA_CASES := [
+	{"scenario": "squad", "seeds": [3, 7, 42, 48213]},
 	{"scenario": "duel", "seeds": [1, 2, 3, 4]},
 ]
+const SEEDS_PER_MATCHUP := [1, 2]
 const MAX_DIFF_LINES := 12
 
 
@@ -40,9 +42,13 @@ func _initialize() -> void:
 	var missing := 0
 	var broken_replay := 0
 
-	for entry: Dictionary in CASES:
+	var cases: Array = []
+	for id in GameData.entry_ids(data.matchups):
+		cases.append({"scenario": id, "seeds": SEEDS_PER_MATCHUP})
+	cases.append_array(EXTRA_CASES)
+	for entry: Dictionary in cases:
 		var scenario := String(entry["scenario"])
-		for seed_value: int in entry["seeds"]:
+		for seed_value: Variant in entry["seeds"]:
 			var report := _report(scenario, data, seed_value)
 			# The same seed must always give the same battle.
 			if report != _report(scenario, data, seed_value):

@@ -22,6 +22,10 @@ than silently picking one.
 - **One rulebook.** `CombatRules` is shared by the simulation and the future tactical grid.
 - **Original names only.** No Firaxis/Long War names, assets or text.
 - Push back on scope that doesn't serve the current roadmap slice.
+- Open design questions waiting for Nick live in README "Decisions for you". Where the code
+  had to pick an interpretation, a switch in `data/combat.json` keeps the spec's wording
+  available (`ai.flank_counts_fallback_shot`, `ai.cap_damage_at_health`).
+- Ready-made battles and their win-rate targets live in `data/matchups.json`.
 
 ## Workflow
 

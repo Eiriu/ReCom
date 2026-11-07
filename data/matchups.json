@@ -1,0 +1,43 @@
+{
+  "_about": "Ready-made battles. invaders and opposition are squad ids from squads.json, terrain is from terrains.json. first_side: attacker (the spec rule: invaders attack, so they go first) or random. target = the spec's invader win-rate range in %, used by the batch runner; matchups without one are for testing only.",
+  "squad": {
+    "name": "2 Wardens, 2 Striders vs Defender squad · Test field (random first turn)",
+    "invaders": "wardens_and_striders", "opposition": "defender_squad", "terrain": "test_field",
+    "stance": "standard", "first_side": "random"
+  },
+  "mixed_forest": {
+    "name": "2 Wardens, 2 Striders vs Defender squad · Forest",
+    "invaders": "wardens_and_striders", "opposition": "defender_squad", "terrain": "forest",
+    "stance": "standard", "first_side": "attacker", "target": [55, 65]
+  },
+  "mixed_farmland": {
+    "name": "2 Wardens, 2 Striders vs Defender squad · Farmland",
+    "invaders": "wardens_and_striders", "opposition": "defender_squad", "terrain": "farmland",
+    "stance": "standard", "first_side": "attacker"
+  },
+  "wardens_local_urban": {
+    "name": "4 Wardens vs Local forces · Urban",
+    "invaders": "four_wardens", "opposition": "local_forces", "terrain": "urban",
+    "stance": "standard", "first_side": "attacker", "target": [80, 90]
+  },
+  "wardens_squad_urban": {
+    "name": "4 Wardens vs Defender squad · Urban",
+    "invaders": "four_wardens", "opposition": "defender_squad", "terrain": "urban",
+    "stance": "standard", "first_side": "attacker", "target": [50, 60]
+  },
+  "vessels_squad_farmland": {
+    "name": "6 Vessels, 1 Drone vs Defender squad · Farmland",
+    "invaders": "vessel_swarm", "opposition": "defender_squad", "terrain": "farmland",
+    "stance": "standard", "first_side": "attacker", "target": [40, 50]
+  },
+  "harrow_strike_urban": {
+    "name": "4 Wardens, 1 Harrow vs Strike team · Urban",
+    "invaders": "wardens_and_harrow", "opposition": "strike_team", "terrain": "urban",
+    "stance": "standard", "first_side": "attacker", "target": [25, 35]
+  },
+  "wardens_strike_crash": {
+    "name": "4 Wardens vs Strike team · Crash site",
+    "invaders": "four_wardens", "opposition": "strike_team", "terrain": "crash_site",
+    "stance": "standard", "first_side": "attacker", "target": [10, 20]
+  }
+}
